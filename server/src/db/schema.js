@@ -91,7 +91,7 @@ function initializeDatabase() {
   const config = require('../config');
   const existing = db.prepare('SELECT id FROM users WHERE username = ?').get('admin');
   if (!existing) {
-    const hash = bcrypt.hashSync('11235813', config.BCRYPT_ROUNDS);
+    const hash = bcrypt.hashSync('admin1234', config.BCRYPT_ROUNDS);
     db.prepare('INSERT INTO users (username, password_hash, is_admin) VALUES (?, ?, 1)').run('admin', hash);
     console.log('[FinTrack] Admin account created (admin)');
   }
