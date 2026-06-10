@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="lianghuaiyuan, hrblianghuaiyuan@163.com">
+<title>财迹 FinTrack 使用手册 v1.2</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;max-width:860px;margin:0 auto;padding:40px 20px;line-height:1.8;color:#1a1d28;background:#f5f7fa}
+h1{text-align:center;font-size:2rem;margin-bottom:4px}
+h1 .ver{font-size:.9rem;color:#687083;font-weight:400}
+h2{border-bottom:2px solid #5b5ef6;padding-bottom:8px;margin:40px 0 16px;color:#5b5ef6}
+h3{margin:20px 0 8px;font-size:1.05rem}
+p,li{color:#444}
+code{background:#e8ecf1;padding:2px 6px;border-radius:4px;font-size:.9em}
+pre{background:#1e1e2e;color:#cdd6f4;padding:16px 20px;border-radius:8px;overflow-x:auto;font-size:.85rem;line-height:1.6}
+table{width:100%;border-collapse:collapse;margin:12px 0}
+th,td{border:1px solid #e2e5ec;padding:10px 14px;text-align:left;font-size:.9rem}
+th{background:#f0f2f5;font-weight:700}
+ol,ul{padding-left:24px}
+li{margin:4px 0}
+.cover{text-align:center;padding:40px 0 20px;border-bottom:2px solid #e2e5ec;margin-bottom:20px}
+.cover p{margin-top:8px;color:#687083}
+.footer{text-align:center;margin-top:40px;padding:20px;color:#9ba3b5;font-size:.85rem;border-top:1px solid #e2e5ec}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>💎 财迹 FinTrack <span class="ver">v1.2</span></h1>
+  <p>离线个人财务管理应用 · 作者 lianghuaiyuan · hrblianghuaiyuan@163.com</p>
+</div>
+
+<h2>概述</h2>
+<p>财迹（FinTrack）是一款完全离线、支持多用户的个人财务管理应用。</p>
+<ul>
+  <li><strong>无需联网</strong> — 所有数据存储在本地 SQLite 数据库中</li>
+  <li><strong>账户制管理</strong> — 按资金账户记录余额/市值，无需逐笔记账</li>
+  <li><strong>收支独立</strong> — 收支记录与投资变动分开，准确计算 XIRR 年化收益率</li>
+  <li><strong>定存自动化</strong> — 单利按日计息，到期自动提醒</li>
+  <li><strong>多用户 + 管理员</strong> — 支持多账户共用，管理员可管理所有用户</li>
+  <li><strong>局域网共享</strong> — 启动后局域网内任意设备浏览器访问</li>
+</ul>
+
+<h2>快速开始</h2>
+
+<h3>环境要求</h3>
+<p>Node.js >= 16（<a href="https://nodejs.org">nodejs.org</a> 下载 LTS 版本），Windows / macOS / Linux 均可。</p>
+
+<h3>安装与启动</h3>
+<ol>
+  <li>双击 <code>setup.bat</code> 安装依赖（仅首次）</li>
+  <li>双击 <code>start.bat</code> 启动服务</li>
+  <li>浏览器访问 <code>http://localhost:10004</code></li>
+</ol>
+<p>其他设备通过局域网 IP 访问，如 <code>http://192.168.1.xxx:10004</code>。</p>
+
+<h3>内置账号</h3>
+<table>
+  <tr><th>用户名</th><th>密码</th><th>角色</th><th>说明</th></tr>
+  <tr><td>admin</td><td>admin1234</td><td>管理员</td><td>可管理所有用户：查看、重置密码、设置/取消管理员、删除</td></tr>
+  <tr><td>demo</td><td>demo1234</td><td>普通用户</td><td>含 5 个账户、4 笔定存、25 条收支记录、95 天余额历史</td></tr>
+</table>
+
+<h2>页面功能</h2>
+
+<h3>📊 仪表盘</h3>
+<ul>
+  <li><strong>统计卡片</strong>：总资产、总收益、年化收益率(XIRR)、定期存款本息</li>
+  <li><strong>到期提醒</strong>：7 天内到期的定存醒目标注</li>
+  <li><strong>资产变化趋势</strong>：带渐变填充的面积折线图，支持 30天/90天/1年切换</li>
+  <li><strong>资产分布</strong>：环形饼图，外部引线标签 + 中心总额</li>
+  <li><strong>月度收支对比</strong>：圆角柱状图，收入(绿) vs 支出(红)</li>
+</ul>
+
+<h3>💳 账户管理</h3>
+<p>创建、编辑、删除资金账户。可按类型筛选（全部/零钱/银行/证券投资/其他）。</p>
+<table>
+  <tr><th>账户类型</th><th>可选资产类别</th><th>说明</th></tr>
+  <tr><td>零钱</td><td>零钱</td><td>微信零钱、支付宝余额等</td></tr>
+  <tr><td>银行</td><td>零钱 / 定期存款 / 投资</td><td>储蓄卡、定存扣款账户</td></tr>
+  <tr><td>证券投资</td><td>投资</td><td>证券账户总市值</td></tr>
+  <tr><td>其他</td><td>零钱 / 投资</td><td>现金、其他金融账户</td></tr>
+</table>
+
+<h3>📋 资产列表</h3>
+<ul>
+  <li>按账户展示余额，点击进入详情</li>
+  <li><strong>更新余额</strong>：直接覆盖为新值</li>
+  <li><strong>调整增/减</strong>：在现有值上加减（如工资入账 +5000）</li>
+  <li><strong>变动记录</strong>：时间线卡片展示每次余额变动，旧值→新值 + 变动额</li>
+</ul>
+
+<h3>🏦 定期存款</h3>
+<ul>
+  <li>创建定存：本金、起息日、到期日、年利率、关联账户</li>
+  <li>自动计算当前本息（单利按日计息）：本息 = 本金 + 本金×年利率×(已存天数/365)</li>
+  <li>到期倒计时 + 到期赎回按钮</li>
+  <li>已赎回定存分区展示，显示实际收益</li>
+</ul>
+
+<h3>💰 收支记录</h3>
+<ul>
+  <li>记录收入和支出，预置分类：工资/奖金/兼职/投资/其他（收入）；餐饮/房租/交通/购物/娱乐/医疗/教育/其他（支出）</li>
+  <li>按类型筛选，月度统计汇总表</li>
+  <li>支持导出 CSV</li>
+</ul>
+
+<h3>📦 数据导入导出</h3>
+<ul>
+  <li><strong>导出全部(JSON)</strong>：备份所有数据到 JSON 文件</li>
+  <li><strong>导入</strong>：选择备份文件 → 预览内容 → 确认覆盖</li>
+</ul>
+
+<h3>📑 报表导出</h3>
+<ul>
+  <li>CSV：收支明细，可用 Excel 打开</li>
+  <li>Excel：资产总览 + 定存汇总</li>
+  <li>JSON：完整备份</li>
+</ul>
+
+<h3>⚙️ 账号管理</h3>
+<ul>
+  <li>查看用户名和用户 ID</li>
+  <li>修改密码（需验证当前密码）</li>
+  <li>删除账户（不可撤销，建议先备份）</li>
+</ul>
+
+<h3>🛡️ 用户管理（管理员专属）</h3>
+<p>仅管理员可见。功能：</p>
+<ul>
+  <li>查看所有注册用户及其数据统计</li>
+  <li>重置任意用户密码</li>
+  <li>设置/取消管理员权限（不能取消自己）</li>
+  <li>删除用户及其全部数据</li>
+</ul>
+
+<h2>设计说明</h2>
+
+<h3>为什么用单利计息？</h3>
+<p>国内银行定期存款统一采用单利计算。单利按日计息透明直观，符合实际银行业务规则。</p>
+
+<h3>XIRR 收益率</h3>
+<p>系统构建现金流序列（投资账户调整记录 + 定存买入/赎回 + 当前总市值），使用牛顿迭代法求解使净现值为零的年化利率。收支记录不参与计算，结果反映纯粹的投资回报。</p>
+
+<h3>离线多用户</h3>
+<p>无邮箱/手机注册，仅需用户名+密码。bcrypt 加密存储不可逆。JWT 令牌 7 天有效。数据通过 user_id 外键完全隔离。</p>
+
+<h2>备份与迁移</h2>
+<ol>
+  <li>旧电脑：导入导出 → 导出全部 → 下载 JSON</li>
+  <li>新电脑：安装启动 FinTrack → 创建任意账号</li>
+  <li>导入导出 → 选择备份文件 → 确认覆盖</li>
+</ol>
+<p>也可直接复制 <code>server/data/fintrack.db</code> 文件。</p>
+
+<h2>技术栈</h2>
+<table>
+  <tr><th>层</th><th>技术</th></tr>
+  <tr><td>后端</td><td>Node.js + Express</td></tr>
+  <tr><td>数据库</td><td>SQLite (better-sqlite3)</td></tr>
+  <tr><td>认证</td><td>JWT + bcrypt</td></tr>
+  <tr><td>前端</td><td>React 18 + Vite</td></tr>
+  <tr><td>图表</td><td>Recharts</td></tr>
+  <tr><td>导出</td><td>CSV / Excel (node-xlsx) / JSON</td></tr>
+  <tr><td>测试</td><td>Jest + Supertest (后端), Vitest + RTL (前端)</td></tr>
+</table>
+
+<h2>常见问题</h2>
+<p><strong>Q：端口被占用？</strong><br>A：修改 <code>.env</code> 中的 PORT 或关闭占用进程。</p>
+<p><strong>Q：数据库错误？</strong><br>A：删除 <code>server/data/fintrack.db</code>，重启自动重建。</p>
+<p><strong>Q：如何局域网访问？</strong><br>A：Vite 已绑定 0.0.0.0:10004，其他设备用本机 IP + 端口号即可。</p>
+<p><strong>Q：普通用户看不到用户管理？</strong><br>A：这是预期行为，只有管理员可见。用 admin 账号登录。</p>
+
+<div class="footer">
+  <p>财迹 FinTrack v1.2 · lianghuaiyuan · hrblianghuaiyuan@163.com</p>
+</div>
+
+</body>
+</html>
