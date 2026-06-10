@@ -12,8 +12,7 @@ export default function ReportExport() {
     setExporting(format);
     try {
       const res = await api.get(url, { responseType: 'blob' });
-      const blob = new Blob([res.data]);
-      const blobUrl = window.URL.createObjectURL(blob);
+      const blobUrl = window.URL.createObjectURL(res.data);
       const a = document.createElement('a');
       a.href = blobUrl;
       const d = new Date();
@@ -22,20 +21,20 @@ export default function ReportExport() {
       a.download = `fintrack_export_${dateStr}.${ext}`;
       document.body.appendChild(a);
       a.click();
-      a.remove();
-      window.URL.revokeObjectURL(blobUrl);
-      setMessage(`${format} 导出已开始下载`);
+      document.body.removeChild(a);
+      setTimeout(() => window.URL.revokeObjectURL(blobUrl), 1000);
+      setMessage(`${format} 已下载`);
     } catch (err) {
-      setError(err.response?.data?.error || '导出失败，请重试');
+      setError('导出失败，请确认已登录且网络正常');
     } finally {
       setExporting('');
     }
   };
 
   const items = [
-    { icon: '📊', title: '收支明细', tag: 'CSV', desc: '所有收支记录，可用 Excel 打开', url: '/api/export/transactions?format=csv', fmt: 'CSV' },
-    { icon: '📋', title: '资产总览', tag: 'Excel', desc: '账户余额、定存明细汇总表格', url: '/api/export/assets?format=xlsx', fmt: 'Excel' },
-    { icon: '💾', title: '完整备份', tag: 'JSON', desc: '全部数据（账户、定存、收支、调整记录），可迁移到其他电脑', url: '/api/export/all', fmt: 'JSON' },
+    { icon: '📊', title: '收支明细', tag: 'CSV', desc: '所有收支记录，可用 Excel 打开', url: '/export/transactions?format=csv', fmt: 'CSV' },
+    { icon: '📋', title: '资产总览', tag: 'Excel', desc: '账户余额、定存明细汇总表格', url: '/export/assets?format=xlsx', fmt: 'Excel' },
+    { icon: '💾', title: '完整备份', tag: 'JSON', desc: '全部数据（账户、定存、收支、调整记录），可迁移到其他电脑', url: '/export/all', fmt: 'JSON' },
   ];
 
   return (
